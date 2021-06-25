@@ -9,14 +9,6 @@ pipeline {
         gitlab(triggerOnPush: true, triggerOnMergeRequest: true, branchFilterType: 'All')
     }
 
-    post {
-        failure {
-            updateGitlabCommitStatus name: 'jenkins-build', state: 'failed'
-        }
-        success {
-            updateGitlabCommitStatus name: 'jenkins-build', state: 'success'
-        }
-    }
 
     environment {
         GOPATH = "${pwd}"
@@ -28,7 +20,7 @@ pipeline {
                 updateGitlabCommitStatus name: 'jenkins_file', state: 'pending'
                 echo 'Linting...'
                 sh 'go version'
-                sh 'go get -u -v https://github.com/smartybrains/CardsApp_Go'
+                sh 'go get -u -v https://github.com/preevenkat/CardsApp-GOLANG.git'
                 sh 'golint -set_exit_status ./...'
                 echo 'Building...'
                 sh '''
@@ -38,4 +30,12 @@ pipeline {
             }
         }
     }
+    /*post {
+        failure {
+            updateGitlabCommitStatus name: 'jenkins-build', state: 'failed'
+        }
+        success {
+            updateGitlabCommitStatus name: 'jenkins-build', state: 'success'
+        }
+    } */
 }
